@@ -3,78 +3,106 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#E83A13">
+<meta name="theme-color" content="#E84A24">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Mi Semana">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg">
 <title>Mi Semana</title>
 <style>
-:root{--cream:#F7E9B9;--orange:#E83A13;--line:#D98562;--ink:#8E2B13}
-*{box-sizing:border-box}body{margin:0;background:#eee;font-family:"Trebuchet MS",Arial,sans-serif;color:var(--orange)}
-button,input,textarea{font:inherit}.app{max-width:1180px;margin:auto;padding:12px}
-.toolbar{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
-.nav{display:flex;gap:6px;align-items:center}.btn{border:1px solid var(--orange);background:var(--cream);color:var(--orange);padding:8px 12px;font-weight:800;cursor:pointer;border-radius:0}
-.weeklabel{font-weight:900;min-width:155px;text-align:center}.paper{background:var(--cream);border:1px solid var(--line);padding:22px}
-h1{font-size:clamp(3rem,8vw,6rem);line-height:.8;margin:0 0 12px;font-weight:900;letter-spacing:-.07em}
-.days{display:grid;grid-template-columns:repeat(7,1fr);border:1px solid var(--line)}
-.day{border-right:1px solid var(--line)}.day:last-child{border:0}.dayname{text-align:center;font-size:12px;font-weight:900;padding:7px 2px}
-.day textarea{display:block;width:100%;height:145px;border:0;border-top:1px solid var(--line);background:transparent;resize:none;padding:8px;color:var(--ink);outline:none;font-size:13px}
-.lower{display:grid;grid-template-columns:1.05fr 1.35fr 1.05fr .9fr;gap:18px;margin-top:18px}.section h2{font-size:17px;margin:0 0 8px;font-weight:900}.checks{display:grid;gap:5px}.checkrow{display:flex;align-items:center;gap:6px;min-height:27px}.checkrow input[type=text]{width:100%;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--ink);outline:none;padding:3px}
-input[type=checkbox]{appearance:none;width:17px;height:17px;border:1px solid var(--orange);background:transparent;cursor:pointer;flex:none;position:relative}
-input[type=checkbox]:checked{background:var(--orange)}input[type=checkbox]:checked:after{content:"✓";position:absolute;color:#fff;font-weight:900;left:3px;top:-1px}
-.prompt{font-size:10px;font-weight:900;margin:0 0 4px}.promptbox{display:block;width:100%;height:45px;border:1px solid var(--line);background:transparent;color:var(--ink);resize:none;padding:6px;margin-bottom:8px;outline:none}
-.habit{display:grid;grid-template-columns:minmax(70px,1fr) repeat(7,18px);gap:4px;align-items:center;margin:5px 0}.habit input[type=text]{border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--ink);width:100%;padding:2px;outline:none;font-size:11px}.habithead{font-size:9px;font-weight:900;text-align:center}
-.menu{border:1px solid var(--line)}.menuhead{background:var(--orange);color:#fff;text-align:center;font-size:18px;font-weight:900;padding:9px}.menurow{display:grid;grid-template-columns:25px 1fr;border-top:1px solid var(--line);min-height:39px}.menurow b{padding:9px 4px}.menurow input{width:100%;border:0;border-left:1px solid var(--line);background:transparent;color:var(--ink);padding:5px;outline:none;font-size:11px}
-@media(max-width:850px){.lower{grid-template-columns:1fr 1fr}.days{overflow-x:auto;grid-template-columns:repeat(7,125px)}}
-@media(max-width:560px){.app{padding:6px}.paper{padding:12px}.lower{grid-template-columns:1fr}.toolbar{align-items:stretch}.nav{width:100%;justify-content:space-between}.weeklabel{min-width:0;flex:1}.days{grid-template-columns:repeat(7,118px)}}
-@media print{body{background:#fff}.toolbar{display:none}.app{max-width:none;padding:0}.paper{border:0}.days{grid-template-columns:repeat(7,1fr)}.day textarea{height:125px}.lower{grid-template-columns:1.05fr 1.35fr 1.05fr .9fr;gap:10px}}
+:root{--cream:#F8E9B7;--cream2:#F4E2A8;--orange:#E84A24;--orange-dark:#B9361A;--line:#D99572;--ink:#71311F;--muted:#9E7A6C;--white:#FFF9E9;--shadow:0 2px 0 rgba(113,49,31,.08)}
+*{box-sizing:border-box}html{background:#ece7df}body{margin:0;background:#ece7df;color:var(--ink);font-family:"Avenir Next","Trebuchet MS",system-ui,sans-serif;-webkit-font-smoothing:antialiased}.app{max-width:1260px;margin:auto;padding:14px 14px 30px}
+.toolbar{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px;flex-wrap:wrap}.nav,.actions{display:flex;gap:7px;align-items:center}.btn{border:1.5px solid var(--orange);background:var(--cream);color:var(--orange-dark);padding:9px 14px;font-weight:800;letter-spacing:.02em;cursor:pointer;border-radius:2px;min-height:42px;transition:transform .08s,background .15s}.btn:active{transform:scale(.97)}.btn.primary{background:var(--orange);color:#fff}.btn.small{min-height:34px;padding:6px 10px;font-size:12px}.weeklabel{font-family:"Arial Narrow","Avenir Next Condensed","Trebuchet MS",sans-serif;font-size:19px;font-weight:800;letter-spacing:.04em;min-width:170px;text-align:center;text-transform:uppercase}
+.paper{background:var(--cream);border:1px solid var(--line);padding:26px 28px 30px;box-shadow:var(--shadow)}
+h1{font-family:"Arial Narrow","Avenir Next Condensed","Trebuchet MS",sans-serif;font-size:clamp(4rem,9vw,7.3rem);line-height:.78;margin:0 0 18px;color:var(--orange);font-weight:900;letter-spacing:-.045em}
+.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border:1px solid var(--line);background:rgba(255,249,233,.12)}.day{min-width:0;border-right:1px solid var(--line)}.day:last-child{border-right:0}.dayname{text-align:center;font-family:"Arial Narrow","Avenir Next Condensed","Trebuchet MS",sans-serif;font-size:15px;letter-spacing:.06em;font-weight:800;padding:8px 3px;color:var(--orange)}.day textarea{display:block;width:100%;height:142px;border:0;border-top:1px solid var(--line);background:transparent;resize:none;padding:10px;color:var(--ink);outline:none;font-size:13px;line-height:1.45}.day textarea:focus,.promptbox:focus,input:focus,select:focus{background:rgba(255,249,233,.42)}
+.progress-wrap{display:flex;align-items:center;gap:12px;margin:17px 0 0}.progress-label{font-family:"Arial Narrow","Avenir Next Condensed","Trebuchet MS",sans-serif;font-size:16px;font-weight:800;white-space:nowrap;text-transform:uppercase;letter-spacing:.04em}.progress{height:9px;border:1px solid var(--line);flex:1;background:transparent;overflow:hidden}.progress>span{display:block;height:100%;width:0;background:var(--orange);transition:width .2s}.progress-count{font-size:12px;font-weight:700;min-width:78px;text-align:right}
+.lower{display:grid;grid-template-columns:1.1fr 1.15fr 1fr 1.15fr;gap:22px;margin-top:20px}.section{min-width:0}.section h2{font-family:"Arial Narrow","Avenir Next Condensed","Trebuchet MS",sans-serif;font-size:21px;letter-spacing:.035em;color:var(--orange);margin:0 0 10px;font-weight:800}.checks{display:grid;gap:6px}.checkrow{display:grid;grid-template-columns:19px 1fr 82px;gap:7px;align-items:center;min-height:32px}.checkrow.grocery{grid-template-columns:19px 1fr 86px}.checkrow input[type=text]{min-width:0;width:100%;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--ink);outline:none;padding:5px 2px;font-size:13px}.mini-select{border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--orange-dark);font-size:10px;font-weight:700;padding:4px 0;outline:none;width:100%}
+input[type=checkbox]{appearance:none;width:19px;height:19px;border:1.5px solid var(--orange);background:transparent;cursor:pointer;flex:none;position:relative;border-radius:5px;margin:0}input[type=checkbox]:checked{background:var(--orange)}input[type=checkbox]:checked:after{content:"✓";position:absolute;color:#fff;font-size:14px;font-weight:900;left:3px;top:-1px}
+.priority-alta{color:var(--orange-dark)!important}.priority-media{color:#9A684F!important}.priority-baja{color:var(--muted)!important}
+.prompt{font-family:"Arial Narrow","Avenir Next Condensed","Trebuchet MS",sans-serif;font-size:13px;font-weight:800;letter-spacing:.04em;color:var(--orange);margin:0 0 5px;text-transform:uppercase}.promptbox{display:block;width:100%;height:47px;border:1px solid var(--line);background:rgba(255,249,233,.13);color:var(--ink);resize:vertical;min-height:42px;padding:7px 8px;margin-bottom:10px;outline:none;font-size:12px;line-height:1.35}
+.habits-title{margin-top:17px!important}.habit-head,.habit{display:grid;grid-template-columns:minmax(70px,1fr) repeat(7,22px);gap:4px;align-items:center}.habit-head{margin-bottom:4px}.habithead{font-family:"Arial Narrow","Avenir Next Condensed","Trebuchet MS",sans-serif;font-size:12px;font-weight:800;text-align:center;color:var(--orange)}.habit{margin:6px 0}.habit input[type=text]{border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--ink);width:100%;padding:4px 2px;outline:none;font-size:11px}.habit-streak{font-size:9px;color:var(--muted);text-align:right;grid-column:1/-1;margin-top:-4px}
+.menu{border:1px solid var(--line);overflow:hidden}.menuhead{background:var(--orange);color:#fff;text-align:center;font-family:"Arial Narrow","Avenir Next Condensed","Trebuchet MS",sans-serif;font-size:22px;letter-spacing:.05em;font-weight:800;padding:9px}.menu-actions{display:flex;gap:6px;padding:7px;border-bottom:1px solid var(--line);background:rgba(255,249,233,.25)}.menu-actions .btn{flex:1}.menu-grid{display:grid;grid-template-columns:32px 1fr 1fr 1fr}.menu-grid>div{border-right:1px solid var(--line);border-bottom:1px solid var(--line)}.menu-grid>div:nth-child(4n){border-right:0}.menu-grid .mh{font-family:"Arial Narrow","Avenir Next Condensed","Trebuchet MS",sans-serif;font-size:11px;font-weight:800;color:var(--orange);text-align:center;padding:7px 2px}.menu-grid .mealhead{text-align:center}.menu-cell{min-width:0;min-height:47px}.menu-cell input{width:100%;height:100%;min-height:47px;border:0;background:transparent;color:var(--ink);padding:7px 6px;outline:none;font-size:10.5px}.menu-day{font-family:"Arial Narrow","Avenir Next Condensed","Trebuchet MS",sans-serif;font-size:17px;font-weight:800;color:var(--orange);display:flex;align-items:center;justify-content:center}
+.payments{display:grid;gap:6px}.payrow{display:grid;grid-template-columns:1.2fr .65fr .8fr 25px;gap:5px;align-items:center}.payrow input{width:100%;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--ink);padding:5px 2px;font-size:10px;outline:none}.payrow input[type=date]{font-size:9px}.payrow .paid{width:18px;height:18px}.payment-summary{font-size:11px;font-weight:700;margin-top:7px;color:var(--orange-dark)}
+@media(max-width:1050px){.lower{grid-template-columns:1fr 1fr}.paper{padding:22px}.days{overflow:hidden}.day textarea{height:128px}}
+@media(max-width:700px){.app{padding:7px}.toolbar{gap:7px}.nav{width:100%;display:grid;grid-template-columns:auto 1fr auto}.actions{width:100%;display:grid;grid-template-columns:1fr 1fr}.btn{min-height:40px;padding:8px 10px}.weeklabel{min-width:0;font-size:17px}.paper{padding:15px 11px 22px}h1{font-size:4.8rem;margin-bottom:14px}.days{overflow-x:auto;grid-template-columns:repeat(7,122px);-webkit-overflow-scrolling:touch}.day textarea{height:125px;font-size:13px}.lower{grid-template-columns:1fr;gap:22px}.checkrow{grid-template-columns:19px 1fr 78px}.menu-grid{grid-template-columns:27px 1fr 1fr 1fr}.menu-cell input{font-size:10px;padding:6px 4px}.progress-wrap{gap:8px}.progress-label{font-size:14px}.progress-count{min-width:65px;font-size:10px}}
+@media(orientation:landscape) and (max-width:950px){.paper{padding:18px}.lower{grid-template-columns:1fr 1fr}.day textarea{height:115px}.app{max-width:none}}
+@media print{html,body{background:#fff}.toolbar{display:none}.app{max-width:none;padding:0}.paper{border:0;box-shadow:none;padding:12px}.days{grid-template-columns:repeat(7,1fr)}.day textarea{height:115px}.lower{grid-template-columns:1fr 1fr;gap:14px}.menu-actions{display:none}}
 </style>
 </head>
 <body>
 <div class="app">
-<div class="toolbar">
-<div class="nav"><button class="btn" id="prev">← Anterior</button><span class="weeklabel" id="weekLabel"></span><button class="btn" id="next">Siguiente →</button></div>
-<div><button class="btn" id="today">Esta semana</button><button class="btn" id="print">Imprimir</button></div>
+  <div class="toolbar">
+    <div class="nav"><button class="btn" id="prev">‹ Anterior</button><span class="weeklabel" id="weekLabel"></span><button class="btn" id="next">Siguiente ›</button></div>
+    <div class="actions"><button class="btn primary" id="today">Hoy</button><button class="btn" id="print">Imprimir</button></div>
+  </div>
+  <div class="paper">
+    <h1>SEMANA</h1>
+    <div class="days" id="days"></div>
+    <div class="progress-wrap"><span class="progress-label">Progreso semanal</span><div class="progress"><span id="progressBar"></span></div><span class="progress-count" id="progressCount">0 de 0</span></div>
+    <div class="lower">
+      <section class="section">
+        <h2>TAREAS Y PENDIENTES</h2><div class="checks" id="tasks"></div>
+        <h2 class="habits-title">SEGUIMIENTO DE HÁBITOS</h2>
+        <div class="habit-head"><span></span><span class="habithead">L</span><span class="habithead">M</span><span class="habithead">X</span><span class="habithead">J</span><span class="habithead">V</span><span class="habithead">S</span><span class="habithead">D</span></div>
+        <div id="habits"></div>
+      </section>
+      <section class="section">
+        <div class="prompt">Frase de la semana</div><textarea class="promptbox" data-key="phrase"></textarea>
+        <div class="prompt">Agradecido por</div><textarea class="promptbox" data-key="grateful"></textarea>
+        <div class="prompt">Planes / salida</div><textarea class="promptbox" data-key="plans"></textarea>
+        <div class="prompt">Notas</div><textarea class="promptbox" data-key="notes"></textarea>
+        <div class="prompt">Pagos</div>
+        <div class="payments" id="payments"></div><div class="payment-summary" id="paymentSummary"></div>
+      </section>
+      <section class="section">
+        <h2>COMPRAS</h2><div class="checks" id="groceries"></div>
+      </section>
+      <section class="section">
+        <div class="menu">
+          <div class="menuhead">MENÚ</div>
+          <div class="menu-actions"><button class="btn small" id="copyMenu">Copiar anterior</button><button class="btn small" id="clearMenu">Limpiar</button></div>
+          <div class="menu-grid" id="menu"></div>
+        </div>
+      </section>
+    </div>
+  </div>
 </div>
-<div class="paper">
-<h1>SEMANA</h1>
-<div class="days" id="days"></div>
-<div class="lower">
-<section class="section"><h2>TAREAS Y PENDIENTES</h2><div class="checks" id="tasks"></div></section>
-<section class="section">
-<div class="prompt">• FRASE DE LA SEMANA</div><textarea class="promptbox" data-key="phrase"></textarea>
-<div class="prompt">• AGRADECIDO POR</div><textarea class="promptbox" data-key="grateful"></textarea>
-<div class="prompt">• PLANES / SALIDA</div><textarea class="promptbox" data-key="plans"></textarea>
-<div class="prompt">• PAGOS</div><textarea class="promptbox" data-key="payments"></textarea>
-<div class="prompt">• NOTAS</div><textarea class="promptbox" data-key="notes"></textarea>
-</section>
-<section class="section"><h2>COMPRAS</h2><div class="checks" id="groceries"></div><h2 style="margin-top:15px">SEGUIMIENTO DE HÁBITOS</h2><div class="habit"><span></span><span class="habithead">L</span><span class="habithead">M</span><span class="habithead">X</span><span class="habithead">J</span><span class="habithead">V</span><span class="habithead">S</span><span class="habithead">D</span></div><div id="habits"></div></section>
-<section class="section"><div class="menu"><div class="menuhead">MENÚ</div><div id="menu"></div></div></section>
-</div></div></div>
 <script>
-const KEY="mi-semana-v1";let weekOffset=0;
-const dayNames=["LUNES","MARTES","MIÉRCOLES","JUEVES","VIERNES","SÁBADO","DOMINGO"];
-const menuDays=["L","M","X","J","V","S","D"];
+const KEY="mi-semana-v2"; const OLD_KEY="mi-semana-v1"; let weekOffset=0;
+const dayNames=["LUNES","MARTES","MIÉRCOLES","JUEVES","VIERNES","SÁBADO","DOMINGO"], menuDays=["L","M","X","J","V","S","D"];
+const taskCats=["Universidad","Casa","Personal","Cocina","Otro"], groceryCats=["Frutas","Verduras","Lácteos","Proteína","Despensa","Limpieza","Otro"];
 function monday(d){d=new Date(d);let n=(d.getDay()+6)%7;d.setHours(0,0,0,0);d.setDate(d.getDate()-n);return d}
 function key(){let d=monday(new Date());d.setDate(d.getDate()+weekOffset*7);return d.toISOString().slice(0,10)}
-function loadAll(){try{return JSON.parse(localStorage.getItem(KEY)||"{}")}catch{return{}}}
+function load(k){try{return JSON.parse(localStorage.getItem(k)||"{}")}catch{return{}}}
+let all=load(KEY); const old=load(OLD_KEY);
+function blank(){return {days:Array(7).fill(""),tasks:Array.from({length:10},()=>({t:"",c:false,cat:"Universidad",p:"Media"})),groceries:Array.from({length:10},()=>({t:"",c:false,cat:"Despensa"})),habits:Array.from({length:5},()=>({t:"",c:Array(7).fill(false)})),menu:Array.from({length:7},()=>({b:"",l:"",d:""})),phrase:"",grateful:"",plans:"",notes:"",payments:Array.from({length:5},()=>({t:"",a:"",d:"",c:false}))}}
+function migrate(k){if(all[k])return; if(old[k]){let o=old[k],n=blank();n.days=o.days||n.days;n.tasks=(o.tasks||n.tasks).map(x=>({...x,cat:x.cat||"Universidad",p:x.p||"Media"}));n.groceries=(o.groceries||n.groceries).map(x=>({...x,cat:x.cat||"Despensa"}));n.habits=o.habits||n.habits;n.phrase=o.phrase||"";n.grateful=o.grateful||"";n.plans=o.plans||"";n.notes=o.notes||"";let ms=o.menu||[];n.menu=n.menu.map((x,i)=>{let v=ms[i];return typeof v==='object'?v:{b:v||"",l:"",d:""}});n.payments=blank().payments;all[k]=n}else all[k]=blank()}
+function data(){let k=key();migrate(k);return all[k]}
 function save(){localStorage.setItem(KEY,JSON.stringify(all))}
-let all=loadAll();
-function blank(){return {days:Array(7).fill(""),tasks:Array.from({length:10},()=>({t:"",c:false})),groceries:Array.from({length:10},()=>({t:"",c:false})),habits:Array.from({length:5},()=>({t:"",c:Array(7).fill(false)})),menu:Array(7).fill(""),phrase:"",grateful:"",plans:"",payments:"",notes:""}}
-function data(){let k=key();if(!all[k])all[k]=blank();return all[k]}
-function render(){let d=data();let mondayDate=monday(new Date(key()+"T00:00:00"));document.getElementById("weekLabel").textContent=mondayDate.toLocaleDateString("es-MX",{day:"numeric",month:"short"})+" – "+new Date(mondayDate.getTime()+6*86400000).toLocaleDateString("es-MX",{day:"numeric",month:"short"});
-document.getElementById("days").innerHTML=dayNames.map((n,i)=>`<div class="day"><div class="dayname">${n}</div><textarea data-day="${i}" aria-label="${n}">${esc(d.days[i])}</textarea></div>`).join("");
-renderChecks("tasks",d.tasks);renderChecks("groceries",d.groceries);
-document.querySelectorAll("[data-key]").forEach(x=>x.value=d[x.dataset.key]);
-document.getElementById("habits").innerHTML=d.habits.map((h,r)=>`<div class="habit"><input type="text" data-habit="${r}" value="${esc(h.t)}" placeholder="Hábito">${h.c.map((v,i)=>`<input type="checkbox" data-habit-c="${r}-${i}" ${v?"checked":""}>`).join("")}</div>`).join("");
-document.getElementById("menu").innerHTML=d.menu.map((v,i)=>`<div class="menurow"><b>${menuDays[i]}</b><input type="text" data-menu="${i}" value="${esc(v)}" placeholder="Escribe aquí..."></div>`).join("");
-wire()}
 function esc(s){return String(s??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;")}
-function renderChecks(id,arr){document.getElementById(id).innerHTML=arr.map((x,i)=>`<label class="checkrow"><input type="checkbox" data-${id}-c="${i}" ${x.c?"checked":""}><input type="text" data-${id}-t="${i}" value="${esc(x.t)}" placeholder="${id==="tasks"?"Pendiente":"Producto"}"></label>`).join("")}
-function wire(){document.querySelectorAll("[data-day]").forEach(x=>x.oninput=()=>{data().days[x.dataset.day]=x.value;save()});
-document.querySelectorAll("[data-key]").forEach(x=>x.oninput=()=>{data()[x.dataset.key]=x.value;save()});
-["tasks","groceries"].forEach(id=>{document.querySelectorAll(`[data-${id}-t]`).forEach(x=>x.oninput=()=>{data()[id][x.dataset[id+"T"]].t=x.value;save()});document.querySelectorAll(`[data-${id}-c]`).forEach(x=>x.onchange=()=>{data()[id][x.dataset[id+"C"]].c=x.checked;save()})});
-document.querySelectorAll("[data-habit]").forEach(x=>x.oninput=()=>{data().habits[x.dataset.habit].t=x.value;save()});document.querySelectorAll("[data-habit-c]").forEach(x=>x.onchange=()=>{let[a,b]=x.dataset.habitC.split("-").map(Number);data().habits[a].c[b]=x.checked;save()});
-document.querySelectorAll("[data-menu]").forEach(x=>x.oninput=()=>{data().menu[x.dataset.menu]=x.value;save()})}
-document.getElementById("prev").onclick=()=>{weekOffset--;render()};document.getElementById("next").onclick=()=>{weekOffset++;render()};document.getElementById("today").onclick=()=>{weekOffset=0;render()};document.getElementById("print").onclick=()=>window.print();render();
+function render(){let d=data(),md=monday(new Date(key()+"T00:00:00"));document.getElementById("weekLabel").textContent=md.toLocaleDateString("es-MX",{day:"numeric",month:"short"})+" – "+new Date(md.getTime()+6*86400000).toLocaleDateString("es-MX",{day:"numeric",month:"short"});
+ document.getElementById("days").innerHTML=dayNames.map((n,i)=>`<div class="day"><div class="dayname">${n}</div><textarea data-day="${i}" aria-label="${n}">${esc(d.days[i])}</textarea></div>`).join("");
+ renderTasks(d.tasks);renderGroceries(d.groceries);renderHabits(d.habits);renderMenu(d.menu);renderPayments(d.payments);document.querySelectorAll("[data-key]").forEach(x=>x.value=d[x.dataset.key]||"");updateProgress();wire()}
+function selectHTML(opts,val,cls='mini-select'){return `<select class="${cls}">${opts.map(o=>`<option ${o===val?'selected':''}>${esc(o)}</option>`).join("")}</select>`}
+function renderTasks(arr){document.getElementById("tasks").innerHTML=arr.map((x,i)=>`<label class="checkrow"><input type="checkbox" data-tc="${i}" ${x.c?'checked':''}><input type="text" data-tt="${i}" value="${esc(x.t)}" placeholder="Pendiente"><select class="mini-select priority-${String(x.p||'Media').toLowerCase()}" data-tp="${i}"><option ${x.p==='Alta'?'selected':''}>Alta</option><option ${(!x.p||x.p==='Media')?'selected':''}>Media</option><option ${x.p==='Baja'?'selected':''}>Baja</option></select></label>`).join("")}
+function renderGroceries(arr){document.getElementById("groceries").innerHTML=arr.map((x,i)=>`<label class="checkrow grocery"><input type="checkbox" data-gc="${i}" ${x.c?'checked':''}><input type="text" data-gt="${i}" value="${esc(x.t)}" placeholder="Producto"><select class="mini-select" data-gcat="${i}">${groceryCats.map(o=>`<option ${o===(x.cat||'Despensa')?'selected':''}>${o}</option>`).join("")}</select></label>`).join("")}
+function renderHabits(arr){document.getElementById("habits").innerHTML=arr.map((h,r)=>{let done=h.c.filter(Boolean).length;return `<div class="habit"><input type="text" data-habit="${r}" value="${esc(h.t)}" placeholder="Hábito">${h.c.map((v,i)=>`<input type="checkbox" data-hc="${r}-${i}" ${v?'checked':''}>`).join("")}<div class="habit-streak">${done} / 7 días</div></div>`}).join("")}
+function renderMenu(arr){document.getElementById("menu").innerHTML=`<div class="mh"></div><div class="mh mealhead">DESAYUNO</div><div class="mh mealhead">COMIDA</div><div class="mh mealhead">CENA</div>`+arr.map((m,i)=>`<div class="menu-day">${menuDays[i]}</div><div class="menu-cell"><input data-m="${i}-b" value="${esc(m.b)}" placeholder="Escribe aquí…"></div><div class="menu-cell"><input data-m="${i}-l" value="${esc(m.l)}" placeholder="Escribe aquí…"></div><div class="menu-cell"><input data-m="${i}-d" value="${esc(m.d)}" placeholder="Escribe aquí…"></div>`).join("")}
+function renderPayments(arr){document.getElementById("payments").innerHTML=arr.map((p,i)=>`<div class="payrow"><input data-pt="${i}" value="${esc(p.t)}" placeholder="Concepto"><input data-pa="${i}" value="${esc(p.a)}" placeholder="$0" inputmode="decimal"><input type="date" data-pd="${i}" value="${esc(p.d)}"><input class="paid" type="checkbox" data-pc="${i}" ${p.c?'checked':''} title="Pagado"></div>`).join("");let total=arr.reduce((s,p)=>s+(parseFloat(String(p.a).replace(/[^0-9.]/g,''))||0),0),pending=arr.filter(p=>p.a&&!p.c).reduce((s,p)=>s+(parseFloat(String(p.a).replace(/[^0-9.]/g,''))||0),0);document.getElementById("paymentSummary").textContent=total?`Total: $${total.toFixed(2)} · Pendiente: $${pending.toFixed(2)}`:""}
+function updateProgress(){let d=data(),filled=d.tasks.filter(x=>x.t.trim()).length,done=d.tasks.filter(x=>x.t.trim()&&x.c).length,pct=filled?Math.round(done/filled*100):0;document.getElementById("progressBar").style.width=pct+"%";document.getElementById("progressCount").textContent=`${done} de ${filled} · ${pct}%`}
+function wire(){document.querySelectorAll("[data-day]").forEach(x=>x.oninput=()=>{data().days[x.dataset.day]=x.value;save()});document.querySelectorAll("[data-key]").forEach(x=>x.oninput=()=>{data()[x.dataset.key]=x.value;save()});
+ document.querySelectorAll("[data-tt]").forEach(x=>x.oninput=()=>{data().tasks[x.dataset.tt].t=x.value;save();updateProgress()});document.querySelectorAll("[data-tc]").forEach(x=>x.onchange=()=>{data().tasks[x.dataset.tc].c=x.checked;save();updateProgress()});document.querySelectorAll("[data-tp]").forEach(x=>x.onchange=()=>{data().tasks[x.dataset.tp].p=x.value;save();x.className='mini-select priority-'+x.value.toLowerCase()});
+ document.querySelectorAll("[data-gt]").forEach(x=>x.oninput=()=>{data().groceries[x.dataset.gt].t=x.value;save()});document.querySelectorAll("[data-gc]").forEach(x=>x.onchange=()=>{data().groceries[x.dataset.gc].c=x.checked;save()});document.querySelectorAll("[data-gcat]").forEach(x=>x.onchange=()=>{data().groceries[x.dataset.gcat].cat=x.value;save()});
+ document.querySelectorAll("[data-habit]").forEach(x=>x.oninput=()=>{data().habits[x.dataset.habit].t=x.value;save()});document.querySelectorAll("[data-hc]").forEach(x=>x.onchange=()=>{let[a,b]=x.dataset.hc.split('-').map(Number);data().habits[a].c[b]=x.checked;save();renderHabits(data().habits);wire()});
+ document.querySelectorAll("[data-m]").forEach(x=>x.oninput=()=>{let[a,b]=x.dataset.m.split('-');data().menu[+a][b]=x.value;save()});
+ document.querySelectorAll("[data-pt]").forEach(x=>x.oninput=()=>{data().payments[x.dataset.pt].t=x.value;save()});document.querySelectorAll("[data-pa]").forEach(x=>x.oninput=()=>{data().payments[x.dataset.pa].a=x.value;save();renderPayments(data().payments);wire()});document.querySelectorAll("[data-pd]").forEach(x=>x.onchange=()=>{data().payments[x.dataset.pd].d=x.value;save()});document.querySelectorAll("[data-pc]").forEach(x=>x.onchange=()=>{data().payments[x.dataset.pc].c=x.checked;save();renderPayments(data().payments);wire()})}
+
+document.getElementById("prev").onclick=()=>{weekOffset--;render()};document.getElementById("next").onclick=()=>{weekOffset++;render()};document.getElementById("today").onclick=()=>{weekOffset=0;render()};document.getElementById("print").onclick=()=>window.print();
+document.getElementById("copyMenu").onclick=()=>{if(weekOffset===-999)return;let prevOffset=weekOffset-1;let dkey=key();let pm=monday(new Date());pm.setDate(pm.getDate()+prevOffset*7);let pk=pm.toISOString().slice(0,10);migrate(pk);data().menu=JSON.parse(JSON.stringify(all[pk].menu));save();render()};
+document.getElementById("clearMenu").onclick=()=>{data().menu=blank().menu;save();render()};
+render();
 </script>
-<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}</script></body></html>
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}</script>
+</body></html>
