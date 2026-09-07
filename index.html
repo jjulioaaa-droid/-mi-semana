@@ -52,7 +52,19 @@ h1{font-family:var(--font-display);font-size:clamp(4rem,9vw,7.3rem);line-height:
 .dayname{text-align:center;font-family:var(--font-display);font-size:14px;letter-spacing:.075em;font-weight:800;padding:8px 3px;color:var(--orange);text-transform:uppercase}
 .day textarea{display:block;width:100%;height:142px;border:0;border-top:1px solid var(--line);background:transparent;resize:none;padding:10px;color:var(--ink);outline:none;font-size:13px;line-height:1.45}
 
-.schedule-tools{display:flex;justify-content:flex-end;margin-top:8px}.schedule-edit{appearance:none;border:1px solid var(--line);background:transparent;color:var(--orange-dark);padding:6px 10px;font-family:var(--font-display);font-size:10px;font-weight:900;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;border-radius:var(--radius);min-height:34px}.schedule-edit:hover{background:rgba(255,249,233,.25)}.schedule-edit:focus-visible{outline:2px solid var(--orange-dark);outline-offset:2px}.day.fixed .dayname{background:rgba(255,249,233,.16)}.day .fixed-label{font-family:var(--font-display);font-size:9px;font-weight:900;letter-spacing:.05em;color:var(--orange-dark);padding:6px 8px 0;text-transform:uppercase}.day .schedule-text{display:block;width:100%;height:142px;border:0;border-top:1px solid var(--line);background:transparent;resize:none;padding:9px 8px;color:var(--ink);outline:none;font-size:13px;line-height:1.4}.day .schedule-text[readonly]{cursor:default}.day .schedule-text:focus{background:rgba(255,249,233,.22);box-shadow:inset 0 0 0 1px var(--orange)}
+/* HORARIO FIJO: pertenece al usuario, no a una semana */
+.schedule-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 8px;padding:0 2px}
+.schedule-title{font-family:var(--font-display);font-size:12px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;color:var(--orange-dark)}
+.schedule-actions{display:flex;gap:7px}
+.schedule-btn{min-height:34px;padding:6px 10px;font-size:11px}
+.day textarea.schedule{height:142px}
+.day textarea.schedule:disabled{opacity:1;color:var(--ink);cursor:default}
+.day textarea.schedule.editing{background:rgba(255,249,233,.22);box-shadow:inset 0 0 0 1px var(--orange)}
+@media(max-width:720px){
+  .schedule-head{margin-bottom:7px}
+  .schedule-btn{min-height:36px;padding:7px 10px}
+  .day textarea.schedule{height:125px}
+}
 .progress-wrap{display:flex;align-items:center;gap:12px;margin:17px 0 0}
 .progress-label,.section h2,.prompt,.habithead,.menuhead,.menu-grid .mh,.menu-day{font-family:var(--font-display)}
 .progress-label{font-size:15px;font-weight:800;white-space:nowrap;text-transform:uppercase;letter-spacing:.055em;color:var(--ink)}
@@ -170,8 +182,11 @@ input[type=checkbox]:focus-visible{outline:2px solid var(--orange-dark);outline-
   </div>
   <div class="paper">
     <h1>JOURNAL</h1>
+    <div class="schedule-head">
+      <div class="schedule-title">Horario fijo · se repite cada semana</div>
+      <div class="schedule-actions"><button class="btn schedule-btn" id="editSchedule">Editar horario</button></div>
+    </div>
     <div class="days" id="days"></div>
-    <div class="schedule-tools"><button class="schedule-edit" id="scheduleEdit" type="button">Editar horario</button></div>
     <div class="progress-wrap"><span class="progress-label">Progreso semanal</span><div class="progress"><span id="progressBar"></span></div><span class="progress-count" id="progressCount">0 de 0</span></div>
     <div class="lower">
       <section class="section">
@@ -202,7 +217,7 @@ input[type=checkbox]:focus-visible{outline:2px solid var(--orange-dark);outline-
   </div>
 </div>
 <script>
-const KEY="mi-semana-v2"; const OLD_KEY="mi-semana-v1"; const FIXED_KEY="journal-fixed-schedule-v1"; let weekOffset=0; let editingSchedule=false;
+const KEY="mi-semana-v2"; const OLD_KEY="mi-semana-v1"; const SCHEDULE_KEY="journal-fixed-schedule-v1"; let weekOffset=0; let scheduleEditing=false;
 const dayNames=["LUNES","MARTES","MIÉRCOLES","JUEVES","VIERNES","SÁBADO","DOMINGO"], menuDays=["L","M","X","J","V","S","D"];
 const taskCats=["Universidad","Casa","Personal","Cocina","Otro"], groceryCats=["Frutas","Verduras","Lácteos","Proteína","Despensa","Limpieza","Otro"];
 function monday(d){d=new Date(d);let n=(d.getDay()+6)%7;d.setHours(0,0,0,0);d.setDate(d.getDate()-n);return d}
@@ -211,12 +226,28 @@ function load(k){try{return JSON.parse(localStorage.getItem(k)||"{}")}catch{retu
 let all=load(KEY); const old=load(OLD_KEY);
 function blank(){return {days:Array(7).fill(""),tasks:Array.from({length:10},()=>({t:"",c:false,cat:"Universidad",p:"Media"})),groceries:Array.from({length:10},()=>({t:"",c:false,cat:"Despensa"})),habits:Array.from({length:5},()=>({t:"",c:Array(7).fill(false)})),menu:Array.from({length:7},()=>({b:"",l:"",d:""})),phrase:"",grateful:"",plans:"",notes:"",payments:Array.from({length:5},()=>({t:"",a:"",d:"",c:false}))}}
 function migrate(k){if(all[k])return; if(old[k]){let o=old[k],n=blank();n.days=o.days||n.days;n.tasks=(o.tasks||n.tasks).map(x=>({...x,cat:x.cat||"Universidad",p:x.p||"Media"}));n.groceries=(o.groceries||n.groceries).map(x=>({...x,cat:x.cat||"Despensa"}));n.habits=o.habits||n.habits;n.phrase=o.phrase||"";n.grateful=o.grateful||"";n.plans=o.plans||"";n.notes=o.notes||"";let ms=o.menu||[];n.menu=n.menu.map((x,i)=>{let v=ms[i];return typeof v==='object'?v:{b:v||"",l:"",d:""}});n.payments=blank().payments;all[k]=n}else all[k]=blank()}
-function getFixedSchedule(){let v=load(FIXED_KEY);if(Array.isArray(v)&&v.length===7)return v;let seeded=(all[key()]&&all[key()].days)||[];let out=Array(7).fill("");for(let i=0;i<7;i++)out[i]=seeded[i]||"";localStorage.setItem(FIXED_KEY,JSON.stringify(out));return out} function saveFixed(v){localStorage.setItem(FIXED_KEY,JSON.stringify(v))}
 function data(){let k=key();migrate(k);return all[k]}
 function save(){localStorage.setItem(KEY,JSON.stringify(all))}
 function esc(s){return String(s??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;")}
+function getSchedule(){
+  let raw=load(SCHEDULE_KEY);
+  if(Array.isArray(raw) && raw.length===7)return raw;
+  if(raw && Array.isArray(raw.days) && raw.days.length===7)return raw.days;
+  let d=data();
+  let initial=(d.days||Array(7).fill("")).map(x=>String(x||""));
+  if(initial.some(x=>x.trim())){localStorage.setItem(SCHEDULE_KEY,JSON.stringify(initial));return initial}
+  return Array(7).fill("");
+}
+function saveSchedule(arr){localStorage.setItem(SCHEDULE_KEY,JSON.stringify(arr))}
+function renderSchedule(){
+  let sch=getSchedule();
+  document.getElementById("days").innerHTML=dayNames.map((n,i)=>`<div class="day"><div class="dayname">${n}</div><textarea class="schedule ${scheduleEditing?'editing':''}" data-sday="${i}" aria-label="Horario fijo ${n}" ${scheduleEditing?'':'disabled'} placeholder="Escribe tus clases…">${esc(sch[i])}</textarea></div>`).join("");
+  let b=document.getElementById("editSchedule");
+  b.textContent=scheduleEditing?'Guardar horario':'Editar horario';
+  b.classList.toggle('primary',scheduleEditing);
+}
 function render(){let d=data(),md=monday(new Date(key()+"T00:00:00"));document.getElementById("weekLabel").textContent=md.toLocaleDateString("es-MX",{day:"numeric",month:"short"})+" – "+new Date(md.getTime()+6*86400000).toLocaleDateString("es-MX",{day:"numeric",month:"short"});
- const fixed=getFixedSchedule(); document.getElementById("days").innerHTML=dayNames.map((n,i)=>`<div class="day fixed"><div class="dayname">${n}</div><div class="fixed-label">Horario fijo</div><textarea class="schedule-text" data-fixed-day="${i}" aria-label="Horario fijo ${n}" ${editingSchedule?'':'readonly'} placeholder="Escribe tus clases…">${esc(fixed[i]||'')}</textarea></div>`).join(""); document.getElementById("scheduleEdit").textContent=editingSchedule?"Guardar horario":"Editar horario";
+ renderSchedule();
  renderTasks(d.tasks);renderGroceries(d.groceries);renderHabits(d.habits);renderMenu(d.menu);renderPayments(d.payments);document.querySelectorAll("[data-key]").forEach(x=>x.value=d[x.dataset.key]||"");updateProgress();wire()}
 function selectHTML(opts,val,cls='mini-select'){return `<select class="${cls}">${opts.map(o=>`<option ${o===val?'selected':''}>${esc(o)}</option>`).join("")}</select>`}
 function renderTasks(arr){document.getElementById("tasks").innerHTML=arr.map((x,i)=>`<label class="checkrow"><input type="checkbox" data-tc="${i}" ${x.c?'checked':''}><input type="text" data-tt="${i}" value="${esc(x.t)}" placeholder="Pendiente"><select class="mini-select priority-${String(x.p||'Media').toLowerCase()}" data-tp="${i}"><option ${x.p==='Alta'?'selected':''}>Alta</option><option ${(!x.p||x.p==='Media')?'selected':''}>Media</option><option ${x.p==='Baja'?'selected':''}>Baja</option></select></label>`).join("")}
@@ -225,13 +256,23 @@ function renderHabits(arr){document.getElementById("habits").innerHTML=arr.map((
 function renderMenu(arr){document.getElementById("menu").innerHTML=`<div class="mh"></div><div class="mh mealhead">DESAYUNO</div><div class="mh mealhead">COMIDA</div><div class="mh mealhead">CENA</div>`+arr.map((m,i)=>`<div class="menu-day">${menuDays[i]}</div><div class="menu-cell"><input data-m="${i}-b" value="${esc(m.b)}" placeholder="Escribe aquí…"></div><div class="menu-cell"><input data-m="${i}-l" value="${esc(m.l)}" placeholder="Escribe aquí…"></div><div class="menu-cell"><input data-m="${i}-d" value="${esc(m.d)}" placeholder="Escribe aquí…"></div>`).join("")}
 function renderPayments(arr){document.getElementById("payments").innerHTML=arr.map((p,i)=>`<div class="payrow"><input data-pt="${i}" value="${esc(p.t)}" placeholder="Concepto"><input data-pa="${i}" value="${esc(p.a)}" placeholder="$0" inputmode="decimal"><input type="date" data-pd="${i}" value="${esc(p.d)}"><input class="paid" type="checkbox" data-pc="${i}" ${p.c?'checked':''} title="Pagado"></div>`).join("");let total=arr.reduce((s,p)=>s+(parseFloat(String(p.a).replace(/[^0-9.]/g,''))||0),0),pending=arr.filter(p=>p.a&&!p.c).reduce((s,p)=>s+(parseFloat(String(p.a).replace(/[^0-9.]/g,''))||0),0);document.getElementById("paymentSummary").textContent=total?`Total: $${total.toFixed(2)} · Pendiente: $${pending.toFixed(2)}`:""}
 function updateProgress(){let d=data(),filled=d.tasks.filter(x=>x.t.trim()).length,done=d.tasks.filter(x=>x.t.trim()&&x.c).length,pct=filled?Math.round(done/filled*100):0;document.getElementById("progressBar").style.width=pct+"%";document.getElementById("progressCount").textContent=filled?`${done} de ${filled} · ${pct}%`:"Sin tareas"}
-function wire(){document.querySelectorAll("[data-fixed-day]").forEach(x=>x.oninput=()=>{let v=getFixedSchedule();v[+x.dataset.fixedDay]=x.value;saveFixed(v)}); document.getElementById("scheduleEdit").onclick=()=>{if(editingSchedule){editingSchedule=false;document.querySelectorAll("[data-fixed-day]").forEach(x=>x.readOnly=true);document.getElementById("scheduleEdit").textContent="Editar horario";saveFixed(getFixedSchedule())}else{editingSchedule=true;document.querySelectorAll("[data-fixed-day]").forEach(x=>x.readOnly=false);document.getElementById("scheduleEdit").textContent="Guardar horario";document.querySelector('[data-fixed-day="0"]')?.focus()}};document.querySelectorAll("[data-day]").forEach(x=>x.oninput=()=>{data().days[x.dataset.day]=x.value;save()});document.querySelectorAll("[data-key]").forEach(x=>x.oninput=()=>{data()[x.dataset.key]=x.value;save()});
+function wire(){document.querySelectorAll("[data-sday]").forEach(x=>x.oninput=()=>{let sch=getSchedule();sch[+x.dataset.sday]=x.value;saveSchedule(sch)});document.querySelectorAll("[data-key]").forEach(x=>x.oninput=()=>{data()[x.dataset.key]=x.value;save()});
  document.querySelectorAll("[data-tt]").forEach(x=>x.oninput=()=>{data().tasks[x.dataset.tt].t=x.value;save();updateProgress()});document.querySelectorAll("[data-tc]").forEach(x=>x.onchange=()=>{data().tasks[x.dataset.tc].c=x.checked;save();updateProgress()});document.querySelectorAll("[data-tp]").forEach(x=>x.onchange=()=>{data().tasks[x.dataset.tp].p=x.value;save();x.className='mini-select priority-'+x.value.toLowerCase()});
  document.querySelectorAll("[data-gt]").forEach(x=>x.oninput=()=>{data().groceries[x.dataset.gt].t=x.value;save()});document.querySelectorAll("[data-gc]").forEach(x=>x.onchange=()=>{data().groceries[x.dataset.gc].c=x.checked;save()});document.querySelectorAll("[data-gcat]").forEach(x=>x.onchange=()=>{data().groceries[x.dataset.gcat].cat=x.value;save()});
  document.querySelectorAll("[data-habit]").forEach(x=>x.oninput=()=>{data().habits[x.dataset.habit].t=x.value;save()});document.querySelectorAll("[data-hc]").forEach(x=>x.onchange=()=>{let[a,b]=x.dataset.hc.split('-').map(Number);data().habits[a].c[b]=x.checked;save();renderHabits(data().habits);wire()});
  document.querySelectorAll("[data-m]").forEach(x=>x.oninput=()=>{let[a,b]=x.dataset.m.split('-');data().menu[+a][b]=x.value;save()});
  document.querySelectorAll("[data-pt]").forEach(x=>x.oninput=()=>{data().payments[x.dataset.pt].t=x.value;save()});document.querySelectorAll("[data-pa]").forEach(x=>x.oninput=()=>{data().payments[x.dataset.pa].a=x.value;save();renderPayments(data().payments);wire()});document.querySelectorAll("[data-pd]").forEach(x=>x.onchange=()=>{data().payments[x.dataset.pd].d=x.value;save()});document.querySelectorAll("[data-pc]").forEach(x=>x.onchange=()=>{data().payments[x.dataset.pc].c=x.checked;save();renderPayments(data().payments);wire()})}
 
+document.getElementById("editSchedule").onclick=()=>{
+  if(scheduleEditing){
+    let sch=Array.from(document.querySelectorAll('[data-sday]')).map(x=>x.value);
+    saveSchedule(sch);
+    scheduleEditing=false;
+  }else{
+    scheduleEditing=true;
+  }
+  renderSchedule();wire();
+};
 document.getElementById("prev").onclick=()=>{weekOffset--;render()};document.getElementById("next").onclick=()=>{weekOffset++;render()};document.getElementById("today").onclick=()=>{weekOffset=0;render()};document.getElementById("print").onclick=()=>window.print();
 document.getElementById("copyMenu").onclick=()=>{if(weekOffset===-999)return;let prevOffset=weekOffset-1;let dkey=key();let pm=monday(new Date());pm.setDate(pm.getDate()+prevOffset*7);let pk=pm.toISOString().slice(0,10);migrate(pk);data().menu=JSON.parse(JSON.stringify(all[pk].menu));save();render()};
 document.getElementById("clearMenu").onclick=()=>{data().menu=blank().menu;save();render()};
