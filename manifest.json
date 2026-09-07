@@ -1,0 +1,9 @@
+{
+  "name":"Mi Semana",
+  "short_name":"Mi Semana",
+  "start_url":"./",
+  "display":"standalone",
+  "background_color":"#F7E9B9",
+  "theme_color":"#E83A13",
+  "lang":"es-MX"
+}
