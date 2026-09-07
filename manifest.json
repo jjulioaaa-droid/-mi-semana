@@ -1,9 +1,1 @@
-{
-  "name": "Journal",
-  "short_name": "Journal",
-  "start_url": "./",
-  "display": "standalone",
-  "background_color": "#F8E9B7",
-  "theme_color": "#E84A24",
-  "lang": "es-MX"
-}
+{"name":"Journal","short_name":"Journal","start_url":"./","display":"standalone","background_color":"#F8E9B7","theme_color":"#E84A24","icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml"}]}

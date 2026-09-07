@@ -172,6 +172,29 @@ input[type=checkbox]:focus-visible{outline:2px solid var(--orange-dark);outline-
   .lower{grid-template-columns:1fr 1fr;gap:14px}
   .menu-actions{display:none}
 }
+
+/* HORARIO 2.4 — tarjetas compactas y formulario integrado */
+.schedule-panel{border:1px solid var(--line);background:rgba(255,249,233,.08);}
+.schedule-cards{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));}
+.schedule-day{min-width:0;border-right:1px solid var(--line);}
+.schedule-day:last-child{border-right:0}
+.schedule-dayname{padding:8px 4px;text-align:center;font-family:var(--font-display);font-size:14px;font-weight:900;letter-spacing:.06em;color:var(--orange);border-bottom:1px solid var(--line);}
+.schedule-list{padding:7px;min-height:150px;display:flex;flex-direction:column;gap:6px}
+.class-card{border:1px solid var(--line-soft);background:rgba(255,249,233,.32);padding:7px 8px;border-radius:4px;}
+.class-name{font-size:12px;font-weight:800;color:var(--ink);line-height:1.2}
+.class-time{font-size:10px;color:var(--orange-dark);margin-top:3px;font-weight:700}
+.add-class{width:100%;border:1px dashed var(--line);background:transparent;color:var(--muted);padding:7px 5px;border-radius:4px;font-family:var(--font-display);font-size:10px;font-weight:800;cursor:pointer}
+.add-class:hover{border-color:var(--orange);color:var(--orange)}
+.schedule-empty{font-size:11px;color:var(--muted);padding:6px 3px;line-height:1.35}
+.schedule-form{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-top:1px solid var(--line);}
+.schedule-form-day{padding:8px;border-right:1px solid var(--line);}
+.schedule-form-day:last-child{border-right:0}
+.schedule-form-day h3{font-family:var(--font-display);font-size:11px;color:var(--orange);margin:0 0 6px;text-transform:uppercase}
+.class-row{display:grid;grid-template-columns:1fr 86px 24px;gap:4px;margin-bottom:5px}
+.class-row input{min-width:0;border:1px solid var(--line-soft);background:rgba(255,249,233,.2);color:var(--ink);padding:6px;font-size:10px;border-radius:3px;outline:none}
+.class-row input:focus{border-color:var(--orange);}
+.class-row .remove-class{border:1px solid var(--line-soft);background:transparent;color:var(--orange-dark);border-radius:3px;cursor:pointer;font-weight:900}
+@media(max-width:900px){.schedule-cards,.schedule-form{grid-template-columns:repeat(7,122px);overflow-x:auto;-webkit-overflow-scrolling:touch}.schedule-day{min-height:150px}.schedule-form-day{min-width:122px}}
 </style>
 </head>
 <body>
@@ -186,7 +209,7 @@ input[type=checkbox]:focus-visible{outline:2px solid var(--orange-dark);outline-
       <div class="schedule-title">Horario fijo · se repite cada semana</div>
       <div class="schedule-actions"><button class="btn schedule-btn" id="editSchedule">Editar horario</button></div>
     </div>
-    <div class="days" id="days"></div>
+    <div class="schedule-panel" id="schedulePanel"></div>
     <div class="progress-wrap"><span class="progress-label">Progreso semanal</span><div class="progress"><span id="progressBar"></span></div><span class="progress-count" id="progressCount">0 de 0</span></div>
     <div class="lower">
       <section class="section">
@@ -231,20 +254,38 @@ function save(){localStorage.setItem(KEY,JSON.stringify(all))}
 function esc(s){return String(s??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;")}
 function getSchedule(){
   let raw=load(SCHEDULE_KEY);
-  if(Array.isArray(raw) && raw.length===7)return raw;
-  if(raw && Array.isArray(raw.days) && raw.days.length===7)return raw.days;
+  if(raw && Array.isArray(raw.days) && raw.days.length===7 && raw.days.some(Array.isArray)) return raw.days;
+  if(Array.isArray(raw) && raw.length===7){
+    let converted=raw.map(v=>{
+      if(Array.isArray(v)) return v.map(c=>({n:c.n||"",t:c.t||""}));
+      let text=String(v||"").trim(); if(!text)return [];
+      return text.split(/\n+/).map(line=>{let parts=line.split(/\s*[·|—–]\s*/);return {n:(parts[0]||"").trim(),t:(parts.slice(1).join(" · ")||"").trim()}}).filter(c=>c.n||c.t);
+    });
+    saveSchedule(converted); return converted;
+  }
   let d=data();
-  let initial=(d.days||Array(7).fill("")).map(x=>String(x||""));
-  if(initial.some(x=>x.trim())){localStorage.setItem(SCHEDULE_KEY,JSON.stringify(initial));return initial}
-  return Array(7).fill("");
+  let initial=(d.days||Array(7).fill("")).map(v=>{
+    let text=String(v||"").trim(); if(!text)return [];
+    return text.split(/\n+/).map(line=>{let parts=line.split(/\s*[·|—–]\s*/);return {n:(parts[0]||"").trim(),t:(parts.slice(1).join(" · ")||"").trim()}}).filter(c=>c.n||c.t);
+  });
+  if(initial.some(x=>x.length)){saveSchedule(initial);return initial}
+  return Array.from({length:7},()=>[]);
 }
-function saveSchedule(arr){localStorage.setItem(SCHEDULE_KEY,JSON.stringify(arr))}
+function saveSchedule(arr){localStorage.setItem(SCHEDULE_KEY,JSON.stringify({days:arr}))}
 function renderSchedule(){
   let sch=getSchedule();
-  document.getElementById("days").innerHTML=dayNames.map((n,i)=>`<div class="day"><div class="dayname">${n}</div><textarea class="schedule ${scheduleEditing?'editing':''}" data-sday="${i}" aria-label="Horario fijo ${n}" ${scheduleEditing?'':'disabled'} placeholder="Escribe tus clases…">${esc(sch[i])}</textarea></div>`).join("");
-  let b=document.getElementById("editSchedule");
-  b.textContent=scheduleEditing?'Guardar horario':'Editar horario';
-  b.classList.toggle('primary',scheduleEditing);
+  const cards=sch.map((day,i)=>`<div class="schedule-day"><div class="schedule-dayname">${dayNames[i]}</div><div class="schedule-list">${day.length?day.map(c=>`<div class="class-card"><div class="class-name">${esc(c.n)}</div><div class="class-time">${esc(c.t)}</div></div>`).join(""):'<div class="schedule-empty">Sin clases</div>'}<button class="add-class" data-add-class="${i}">+ Añadir clase</button></div></div>`).join("");
+  let html=`<div class="schedule-cards">${cards}</div>`;
+  if(scheduleEditing){
+    html+=`<div class="schedule-form">${sch.map((day,i)=>`<div class="schedule-form-day"><h3>${dayNames[i]}</h3>${day.map((c,j)=>`<div class="class-row"><input data-sn="${i}-${j}" value="${esc(c.n)}" placeholder="Materia"><input data-st="${i}-${j}" value="${esc(c.t)}" placeholder="1 - 2:30 p. m."><button class="remove-class" data-remove-class="${i}-${j}" title="Eliminar">×</button></div>`).join("")}<button class="add-class" data-add-form="${i}">+ Añadir clase</button></div>`).join("")}</div>`;
+  }
+  document.getElementById("schedulePanel").innerHTML=html;
+  let b=document.getElementById("editSchedule"); b.textContent=scheduleEditing?'Guardar horario':'Editar horario'; b.classList.toggle('primary',scheduleEditing);
+  document.querySelectorAll('[data-add-class]').forEach(btn=>btn.onclick=()=>{let a=getSchedule();a[+btn.dataset.addClass].push({n:"",t:""});saveSchedule(a);scheduleEditing=true;renderSchedule()});
+  document.querySelectorAll('[data-add-form]').forEach(btn=>btn.onclick=()=>{let a=getSchedule();a[+btn.dataset.addForm].push({n:"",t:""});saveSchedule(a);renderSchedule()});
+  document.querySelectorAll('[data-sn]').forEach(x=>x.oninput=()=>{let [i,j]=x.dataset.sn.split('-').map(Number);let a=getSchedule();a[i][j].n=x.value;saveSchedule(a);});
+  document.querySelectorAll('[data-st]').forEach(x=>x.oninput=()=>{let [i,j]=x.dataset.st.split('-').map(Number);let a=getSchedule();a[i][j].t=x.value;saveSchedule(a);});
+  document.querySelectorAll('[data-remove-class]').forEach(btn=>btn.onclick=()=>{let [i,j]=btn.dataset.removeClass.split('-').map(Number);let a=getSchedule();a[i].splice(j,1);saveSchedule(a);renderSchedule()});
 }
 function render(){let d=data(),md=monday(new Date(key()+"T00:00:00"));document.getElementById("weekLabel").textContent=md.toLocaleDateString("es-MX",{day:"numeric",month:"short"})+" – "+new Date(md.getTime()+6*86400000).toLocaleDateString("es-MX",{day:"numeric",month:"short"});
  renderSchedule();
@@ -263,16 +304,7 @@ function wire(){document.querySelectorAll("[data-sday]").forEach(x=>x.oninput=()
  document.querySelectorAll("[data-m]").forEach(x=>x.oninput=()=>{let[a,b]=x.dataset.m.split('-');data().menu[+a][b]=x.value;save()});
  document.querySelectorAll("[data-pt]").forEach(x=>x.oninput=()=>{data().payments[x.dataset.pt].t=x.value;save()});document.querySelectorAll("[data-pa]").forEach(x=>x.oninput=()=>{data().payments[x.dataset.pa].a=x.value;save();renderPayments(data().payments);wire()});document.querySelectorAll("[data-pd]").forEach(x=>x.onchange=()=>{data().payments[x.dataset.pd].d=x.value;save()});document.querySelectorAll("[data-pc]").forEach(x=>x.onchange=()=>{data().payments[x.dataset.pc].c=x.checked;save();renderPayments(data().payments);wire()})}
 
-document.getElementById("editSchedule").onclick=()=>{
-  if(scheduleEditing){
-    let sch=Array.from(document.querySelectorAll('[data-sday]')).map(x=>x.value);
-    saveSchedule(sch);
-    scheduleEditing=false;
-  }else{
-    scheduleEditing=true;
-  }
-  renderSchedule();wire();
-};
+document.getElementById("editSchedule").onclick=()=>{ scheduleEditing=!scheduleEditing; renderSchedule(); };
 document.getElementById("prev").onclick=()=>{weekOffset--;render()};document.getElementById("next").onclick=()=>{weekOffset++;render()};document.getElementById("today").onclick=()=>{weekOffset=0;render()};document.getElementById("print").onclick=()=>window.print();
 document.getElementById("copyMenu").onclick=()=>{if(weekOffset===-999)return;let prevOffset=weekOffset-1;let dkey=key();let pm=monday(new Date());pm.setDate(pm.getDate()+prevOffset*7);let pk=pm.toISOString().slice(0,10);migrate(pk);data().menu=JSON.parse(JSON.stringify(all[pk].menu));save();render()};
 document.getElementById("clearMenu").onclick=()=>{data().menu=blank().menu;save();render()};
