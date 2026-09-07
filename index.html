@@ -173,28 +173,34 @@ input[type=checkbox]:focus-visible{outline:2px solid var(--orange-dark);outline-
   .menu-actions{display:none}
 }
 
-/* HORARIO 2.4 — tarjetas compactas y formulario integrado */
-.schedule-panel{border:1px solid var(--line);background:rgba(255,249,233,.08);}
-.schedule-cards{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));}
-.schedule-day{min-width:0;border-right:1px solid var(--line);}
+/* HORARIO 2.5 — edición sencilla con formulario emergente */
+.schedule-panel{border:1px solid var(--line);background:rgba(255,249,233,.08)}
+.schedule-cards{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
+.schedule-day{min-width:0;border-right:1px solid var(--line)}
 .schedule-day:last-child{border-right:0}
-.schedule-dayname{padding:8px 4px;text-align:center;font-family:var(--font-display);font-size:14px;font-weight:900;letter-spacing:.06em;color:var(--orange);border-bottom:1px solid var(--line);}
+.schedule-dayname{padding:8px 4px;text-align:center;font-family:var(--font-display);font-size:14px;font-weight:900;letter-spacing:.06em;color:var(--orange);border-bottom:1px solid var(--line)}
 .schedule-list{padding:7px;min-height:150px;display:flex;flex-direction:column;gap:6px}
-.class-card{border:1px solid var(--line-soft);background:rgba(255,249,233,.32);padding:7px 8px;border-radius:4px;}
-.class-name{font-size:12px;font-weight:800;color:var(--ink);line-height:1.2}
+.class-card{appearance:none;width:100%;text-align:left;border:1px solid var(--line-soft);background:rgba(255,249,233,.32);padding:8px;border-radius:4px;color:var(--ink);cursor:pointer}
+.class-card:hover,.class-card:focus-visible{border-color:var(--orange);background:rgba(255,249,233,.55);outline:none}
+.class-name{font-size:12px;font-weight:800;line-height:1.2}
 .class-time{font-size:10px;color:var(--orange-dark);margin-top:3px;font-weight:700}
-.add-class{width:100%;border:1px dashed var(--line);background:transparent;color:var(--muted);padding:7px 5px;border-radius:4px;font-family:var(--font-display);font-size:10px;font-weight:800;cursor:pointer}
+.add-class{width:100%;border:1px dashed var(--line);background:transparent;color:var(--muted);padding:8px 5px;border-radius:4px;font-family:var(--font-display);font-size:10px;font-weight:800;cursor:pointer}
 .add-class:hover{border-color:var(--orange);color:var(--orange)}
 .schedule-empty{font-size:11px;color:var(--muted);padding:6px 3px;line-height:1.35}
-.schedule-form{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-top:1px solid var(--line);}
-.schedule-form-day{padding:8px;border-right:1px solid var(--line);}
-.schedule-form-day:last-child{border-right:0}
-.schedule-form-day h3{font-family:var(--font-display);font-size:11px;color:var(--orange);margin:0 0 6px;text-transform:uppercase}
-.class-row{display:grid;grid-template-columns:1fr 86px 24px;gap:4px;margin-bottom:5px}
-.class-row input{min-width:0;border:1px solid var(--line-soft);background:rgba(255,249,233,.2);color:var(--ink);padding:6px;font-size:10px;border-radius:3px;outline:none}
-.class-row input:focus{border-color:var(--orange);}
-.class-row .remove-class{border:1px solid var(--line-soft);background:transparent;color:var(--orange-dark);border-radius:3px;cursor:pointer;font-weight:900}
-@media(max-width:900px){.schedule-cards,.schedule-form{grid-template-columns:repeat(7,122px);overflow-x:auto;-webkit-overflow-scrolling:touch}.schedule-day{min-height:150px}.schedule-form-day{min-width:122px}}
+.schedule-help{font-size:10px;color:var(--muted);margin-top:7px;text-align:right}
+.schedule-modal{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(40,25,18,.34);backdrop-filter:blur(2px)}
+.schedule-modal.open{display:flex}
+.schedule-dialog{width:min(430px,100%);background:var(--cream);border:1px solid var(--orange);box-shadow:0 12px 35px rgba(60,30,20,.22);padding:18px;border-radius:3px}
+.schedule-dialog h3{margin:0 0 3px;font-family:var(--font-display);font-size:22px;color:var(--orange);text-transform:uppercase;letter-spacing:.04em}
+.schedule-dialog .modal-day{font-size:11px;font-weight:800;color:var(--muted);margin-bottom:14px;text-transform:uppercase}
+.schedule-field{display:block;margin:10px 0}
+.schedule-field span{display:block;font-family:var(--font-display);font-size:11px;font-weight:900;color:var(--orange-dark);text-transform:uppercase;margin-bottom:4px}
+.schedule-field input{width:100%;height:44px;border:1px solid var(--line-soft);background:rgba(255,249,233,.35);color:var(--ink);padding:9px 10px;font-size:14px;border-radius:3px;outline:none}
+.schedule-field input:focus{border-color:var(--orange);background:rgba(255,249,233,.6)}
+.modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:15px}
+.modal-actions .btn{width:100%}
+.modal-actions .delete-btn{grid-column:1/-1;border-color:var(--line);color:var(--orange-dark);background:transparent}
+@media(max-width:900px){.schedule-cards{grid-template-columns:repeat(7,122px);overflow-x:auto;-webkit-overflow-scrolling:touch}.schedule-day{min-height:150px}.schedule-help{text-align:left}}
 </style>
 </head>
 <body>
@@ -207,7 +213,7 @@ input[type=checkbox]:focus-visible{outline:2px solid var(--orange-dark);outline-
     <h1>JOURNAL</h1>
     <div class="schedule-head">
       <div class="schedule-title">Horario fijo · se repite cada semana</div>
-      <div class="schedule-actions"><button class="btn schedule-btn" id="editSchedule">Editar horario</button></div>
+      <div class="schedule-actions"><button class="btn schedule-btn" id="editSchedule">Añadir clase</button></div>
     </div>
     <div class="schedule-panel" id="schedulePanel"></div>
     <div class="progress-wrap"><span class="progress-label">Progreso semanal</span><div class="progress"><span id="progressBar"></span></div><span class="progress-count" id="progressCount">0 de 0</span></div>
@@ -239,6 +245,19 @@ input[type=checkbox]:focus-visible{outline:2px solid var(--orange-dark);outline-
     </div>
   </div>
 </div>
+<div class="schedule-modal" id="scheduleModal" aria-hidden="true">
+  <div class="schedule-dialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <h3 id="modalTitle">Clase</h3>
+    <div class="modal-day"><select id="modalDaySelect" class="mini-select"></select><input type="hidden" id="modalDay"></div>
+    <label class="schedule-field"><span>Materia</span><input id="classNameInput" type="text" placeholder="Inglés General III" autocomplete="off"></label>
+    <label class="schedule-field"><span>Horario</span><input id="classTimeInput" type="text" placeholder="1 - 2:30 p. m." autocomplete="off"></label>
+    <div class="modal-actions">
+      <button class="btn primary" id="saveClass" type="button">Guardar</button>
+      <button class="btn" id="cancelClass" type="button">Cancelar</button>
+      <button class="btn delete-btn" id="deleteClass" type="button">Eliminar clase</button>
+    </div>
+  </div>
+</div>
 <script>
 const KEY="mi-semana-v2"; const OLD_KEY="mi-semana-v1"; const SCHEDULE_KEY="journal-fixed-schedule-v1"; let weekOffset=0; let scheduleEditing=false;
 const dayNames=["LUNES","MARTES","MIÉRCOLES","JUEVES","VIERNES","SÁBADO","DOMINGO"], menuDays=["L","M","X","J","V","S","D"];
@@ -254,7 +273,7 @@ function save(){localStorage.setItem(KEY,JSON.stringify(all))}
 function esc(s){return String(s??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;")}
 function getSchedule(){
   let raw=load(SCHEDULE_KEY);
-  if(raw && Array.isArray(raw.days) && raw.days.length===7 && raw.days.some(Array.isArray)) return raw.days;
+  if(raw && Array.isArray(raw.days) && raw.days.length===7) return raw.days.map(day=>Array.isArray(day)?day.map(c=>({n:c.n||"",t:c.t||""})):[]);
   if(Array.isArray(raw) && raw.length===7){
     let converted=raw.map(v=>{
       if(Array.isArray(v)) return v.map(c=>({n:c.n||"",t:c.t||""}));
@@ -272,20 +291,44 @@ function getSchedule(){
   return Array.from({length:7},()=>[]);
 }
 function saveSchedule(arr){localStorage.setItem(SCHEDULE_KEY,JSON.stringify({days:arr}))}
+function openClassModal(dayIndex,classIndex=-1){
+  const sch=getSchedule();
+  const c=classIndex>=0?(sch[dayIndex][classIndex]||{n:"",t:""}):{n:"",t:""};
+  document.getElementById("scheduleModal").classList.add("open");
+  document.getElementById("modalTitle").textContent=classIndex>=0?"Editar clase":"Añadir clase";
+  document.getElementById("modalDaySelect").innerHTML=dayNames.map((d,i)=>`<option value="${i}">${d}</option>`).join(""); document.getElementById("modalDaySelect").value=String(dayIndex);
+  document.getElementById("classNameInput").value=c.n||"";
+  document.getElementById("classTimeInput").value=c.t||"";
+  document.getElementById("modalDay").value=String(dayIndex);
+  document.getElementById("modalDay").dataset.index=classIndex;
+  document.getElementById("deleteClass").style.display=classIndex>=0?'block':'none'; document.getElementById("modalDaySelect").disabled=classIndex>=0;
+  setTimeout(()=>document.getElementById("classNameInput").focus(),50);
+}
+function closeClassModal(){document.getElementById("scheduleModal").classList.remove("open")}
+document.getElementById("modalDaySelect").onchange=()=>{document.getElementById("modalDay").value=document.getElementById("modalDaySelect").value};
+function saveClassFromModal(){
+  const day=+document.getElementById("modalDay").value;
+  const index=+document.getElementById("modalDay").dataset.index;
+  const n=document.getElementById("classNameInput").value.trim();
+  const t=document.getElementById("classTimeInput").value.trim();
+  if(!n && !t){closeClassModal();return}
+  let sch=getSchedule();
+  if(index>=0) sch[day][index]={n,t}; else sch[day].push({n,t});
+  saveSchedule(sch);closeClassModal();renderSchedule();
+}
+function deleteClassFromModal(){
+  const day=+document.getElementById("modalDay").value;
+  const index=+document.getElementById("modalDay").dataset.index;
+  if(index<0)return;
+  let sch=getSchedule();sch[day].splice(index,1);saveSchedule(sch);closeClassModal();renderSchedule();
+}
 function renderSchedule(){
   let sch=getSchedule();
-  const cards=sch.map((day,i)=>`<div class="schedule-day"><div class="schedule-dayname">${dayNames[i]}</div><div class="schedule-list">${day.length?day.map(c=>`<div class="class-card"><div class="class-name">${esc(c.n)}</div><div class="class-time">${esc(c.t)}</div></div>`).join(""):'<div class="schedule-empty">Sin clases</div>'}<button class="add-class" data-add-class="${i}">+ Añadir clase</button></div></div>`).join("");
-  let html=`<div class="schedule-cards">${cards}</div>`;
-  if(scheduleEditing){
-    html+=`<div class="schedule-form">${sch.map((day,i)=>`<div class="schedule-form-day"><h3>${dayNames[i]}</h3>${day.map((c,j)=>`<div class="class-row"><input data-sn="${i}-${j}" value="${esc(c.n)}" placeholder="Materia"><input data-st="${i}-${j}" value="${esc(c.t)}" placeholder="1 - 2:30 p. m."><button class="remove-class" data-remove-class="${i}-${j}" title="Eliminar">×</button></div>`).join("")}<button class="add-class" data-add-form="${i}">+ Añadir clase</button></div>`).join("")}</div>`;
-  }
-  document.getElementById("schedulePanel").innerHTML=html;
-  let b=document.getElementById("editSchedule"); b.textContent=scheduleEditing?'Guardar horario':'Editar horario'; b.classList.toggle('primary',scheduleEditing);
-  document.querySelectorAll('[data-add-class]').forEach(btn=>btn.onclick=()=>{let a=getSchedule();a[+btn.dataset.addClass].push({n:"",t:""});saveSchedule(a);scheduleEditing=true;renderSchedule()});
-  document.querySelectorAll('[data-add-form]').forEach(btn=>btn.onclick=()=>{let a=getSchedule();a[+btn.dataset.addForm].push({n:"",t:""});saveSchedule(a);renderSchedule()});
-  document.querySelectorAll('[data-sn]').forEach(x=>x.oninput=()=>{let [i,j]=x.dataset.sn.split('-').map(Number);let a=getSchedule();a[i][j].n=x.value;saveSchedule(a);});
-  document.querySelectorAll('[data-st]').forEach(x=>x.oninput=()=>{let [i,j]=x.dataset.st.split('-').map(Number);let a=getSchedule();a[i][j].t=x.value;saveSchedule(a);});
-  document.querySelectorAll('[data-remove-class]').forEach(btn=>btn.onclick=()=>{let [i,j]=btn.dataset.removeClass.split('-').map(Number);let a=getSchedule();a[i].splice(j,1);saveSchedule(a);renderSchedule()});
+  const cards=sch.map((day,i)=>`<div class="schedule-day"><div class="schedule-dayname">${dayNames[i]}</div><div class="schedule-list">${day.length?day.map((c,j)=>`<button class="class-card" data-edit-class="${i}-${j}" type="button"><div class="class-name">${esc(c.n)}</div><div class="class-time">${esc(c.t)}</div></button>`).join(""):'<div class="schedule-empty">Sin clases</div>'}<button class="add-class" data-add-class="${i}" type="button">+ Añadir clase</button></div></div>`).join("");
+  document.getElementById("schedulePanel").innerHTML=`<div class="schedule-cards">${cards}</div><div class="schedule-help">Toca una clase para editarla · usa «Añadir clase» para agregar otra</div>`;
+  document.getElementById("editSchedule").textContent='Añadir clase';
+  document.querySelectorAll('[data-add-class]').forEach(btn=>btn.onclick=()=>openClassModal(+btn.dataset.addClass));
+  document.querySelectorAll('[data-edit-class]').forEach(btn=>btn.onclick=()=>{let [i,j]=btn.dataset.editClass.split('-').map(Number);openClassModal(i,j)});
 }
 function render(){let d=data(),md=monday(new Date(key()+"T00:00:00"));document.getElementById("weekLabel").textContent=md.toLocaleDateString("es-MX",{day:"numeric",month:"short"})+" – "+new Date(md.getTime()+6*86400000).toLocaleDateString("es-MX",{day:"numeric",month:"short"});
  renderSchedule();
@@ -304,10 +347,15 @@ function wire(){document.querySelectorAll("[data-sday]").forEach(x=>x.oninput=()
  document.querySelectorAll("[data-m]").forEach(x=>x.oninput=()=>{let[a,b]=x.dataset.m.split('-');data().menu[+a][b]=x.value;save()});
  document.querySelectorAll("[data-pt]").forEach(x=>x.oninput=()=>{data().payments[x.dataset.pt].t=x.value;save()});document.querySelectorAll("[data-pa]").forEach(x=>x.oninput=()=>{data().payments[x.dataset.pa].a=x.value;save();renderPayments(data().payments);wire()});document.querySelectorAll("[data-pd]").forEach(x=>x.onchange=()=>{data().payments[x.dataset.pd].d=x.value;save()});document.querySelectorAll("[data-pc]").forEach(x=>x.onchange=()=>{data().payments[x.dataset.pc].c=x.checked;save();renderPayments(data().payments);wire()})}
 
-document.getElementById("editSchedule").onclick=()=>{ scheduleEditing=!scheduleEditing; renderSchedule(); };
+document.getElementById("editSchedule").onclick=()=>openClassModal(0);
 document.getElementById("prev").onclick=()=>{weekOffset--;render()};document.getElementById("next").onclick=()=>{weekOffset++;render()};document.getElementById("today").onclick=()=>{weekOffset=0;render()};document.getElementById("print").onclick=()=>window.print();
 document.getElementById("copyMenu").onclick=()=>{if(weekOffset===-999)return;let prevOffset=weekOffset-1;let dkey=key();let pm=monday(new Date());pm.setDate(pm.getDate()+prevOffset*7);let pk=pm.toISOString().slice(0,10);migrate(pk);data().menu=JSON.parse(JSON.stringify(all[pk].menu));save();render()};
 document.getElementById("clearMenu").onclick=()=>{data().menu=blank().menu;save();render()};
+document.getElementById("saveClass").onclick=saveClassFromModal;
+document.getElementById("cancelClass").onclick=closeClassModal;
+document.getElementById("deleteClass").onclick=deleteClassFromModal;
+document.getElementById("scheduleModal").addEventListener("click",e=>{if(e.target.id==="scheduleModal")closeClassModal()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeClassModal();if(e.key==="Enter"&&document.getElementById("scheduleModal").classList.contains("open")){if(document.activeElement.tagName!=="TEXTAREA")saveClassFromModal()}});
 render();
 </script>
 <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}</script>
