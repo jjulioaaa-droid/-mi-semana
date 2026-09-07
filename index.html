@@ -10,25 +10,155 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg">
 <title>Mi Semana</title>
-<style>
-:root{--cream:#F8E9B7;--cream2:#F4E2A8;--orange:#E84A24;--orange-dark:#B9361A;--line:#D99572;--ink:#71311F;--muted:#9E7A6C;--white:#FFF9E9;--shadow:0 2px 0 rgba(113,49,31,.08)}
-*{box-sizing:border-box}html{background:#ece7df}body{margin:0;background:#ece7df;color:var(--ink);font-family:"Avenir Next","Trebuchet MS",system-ui,sans-serif;-webkit-font-smoothing:antialiased}.app{max-width:1260px;margin:auto;padding:14px 14px 30px}
-.toolbar{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px;flex-wrap:wrap}.nav,.actions{display:flex;gap:7px;align-items:center}.btn{border:1.5px solid var(--orange);background:var(--cream);color:var(--orange-dark);padding:9px 14px;font-weight:800;letter-spacing:.02em;cursor:pointer;border-radius:2px;min-height:42px;transition:transform .08s,background .15s}.btn:active{transform:scale(.97)}.btn.primary{background:var(--orange);color:#fff}.btn.small{min-height:34px;padding:6px 10px;font-size:12px}.weeklabel{font-family:"Arial Narrow","Avenir Next Condensed","Trebuchet MS",sans-serif;font-size:19px;font-weight:800;letter-spacing:.04em;min-width:170px;text-align:center;text-transform:uppercase}
-.paper{background:var(--cream);border:1px solid var(--line);padding:26px 28px 30px;box-shadow:var(--shadow)}
-h1{font-family:"Arial Narrow","Avenir Next Condensed","Trebuchet MS",sans-serif;font-size:clamp(4rem,9vw,7.3rem);line-height:.78;margin:0 0 18px;color:var(--orange);font-weight:900;letter-spacing:-.045em}
-.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border:1px solid var(--line);background:rgba(255,249,233,.12)}.day{min-width:0;border-right:1px solid var(--line)}.day:last-child{border-right:0}.dayname{text-align:center;font-family:"Arial Narrow","Avenir Next Condensed","Trebuchet MS",sans-serif;font-size:15px;letter-spacing:.06em;font-weight:800;padding:8px 3px;color:var(--orange)}.day textarea{display:block;width:100%;height:142px;border:0;border-top:1px solid var(--line);background:transparent;resize:none;padding:10px;color:var(--ink);outline:none;font-size:13px;line-height:1.45}.day textarea:focus,.promptbox:focus,input:focus,select:focus{background:rgba(255,249,233,.42)}
-.progress-wrap{display:flex;align-items:center;gap:12px;margin:17px 0 0}.progress-label{font-family:"Arial Narrow","Avenir Next Condensed","Trebuchet MS",sans-serif;font-size:16px;font-weight:800;white-space:nowrap;text-transform:uppercase;letter-spacing:.04em}.progress{height:9px;border:1px solid var(--line);flex:1;background:transparent;overflow:hidden}.progress>span{display:block;height:100%;width:0;background:var(--orange);transition:width .2s}.progress-count{font-size:12px;font-weight:700;min-width:78px;text-align:right}
-.lower{display:grid;grid-template-columns:1.1fr 1.15fr 1fr 1.15fr;gap:22px;margin-top:20px}.section{min-width:0}.section h2{font-family:"Arial Narrow","Avenir Next Condensed","Trebuchet MS",sans-serif;font-size:21px;letter-spacing:.035em;color:var(--orange);margin:0 0 10px;font-weight:800}.checks{display:grid;gap:6px}.checkrow{display:grid;grid-template-columns:19px 1fr 82px;gap:7px;align-items:center;min-height:32px}.checkrow.grocery{grid-template-columns:19px 1fr 86px}.checkrow input[type=text]{min-width:0;width:100%;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--ink);outline:none;padding:5px 2px;font-size:13px}.mini-select{border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--orange-dark);font-size:10px;font-weight:700;padding:4px 0;outline:none;width:100%}
-input[type=checkbox]{appearance:none;width:19px;height:19px;border:1.5px solid var(--orange);background:transparent;cursor:pointer;flex:none;position:relative;border-radius:5px;margin:0}input[type=checkbox]:checked{background:var(--orange)}input[type=checkbox]:checked:after{content:"✓";position:absolute;color:#fff;font-size:14px;font-weight:900;left:3px;top:-1px}
-.priority-alta{color:var(--orange-dark)!important}.priority-media{color:#9A684F!important}.priority-baja{color:var(--muted)!important}
-.prompt{font-family:"Arial Narrow","Avenir Next Condensed","Trebuchet MS",sans-serif;font-size:13px;font-weight:800;letter-spacing:.04em;color:var(--orange);margin:0 0 5px;text-transform:uppercase}.promptbox{display:block;width:100%;height:47px;border:1px solid var(--line);background:rgba(255,249,233,.13);color:var(--ink);resize:vertical;min-height:42px;padding:7px 8px;margin-bottom:10px;outline:none;font-size:12px;line-height:1.35}
-.habits-title{margin-top:17px!important}.habit-head,.habit{display:grid;grid-template-columns:minmax(70px,1fr) repeat(7,22px);gap:4px;align-items:center}.habit-head{margin-bottom:4px}.habithead{font-family:"Arial Narrow","Avenir Next Condensed","Trebuchet MS",sans-serif;font-size:12px;font-weight:800;text-align:center;color:var(--orange)}.habit{margin:6px 0}.habit input[type=text]{border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--ink);width:100%;padding:4px 2px;outline:none;font-size:11px}.habit-streak{font-size:9px;color:var(--muted);text-align:right;grid-column:1/-1;margin-top:-4px}
-.menu{border:1px solid var(--line);overflow:hidden}.menuhead{background:var(--orange);color:#fff;text-align:center;font-family:"Arial Narrow","Avenir Next Condensed","Trebuchet MS",sans-serif;font-size:22px;letter-spacing:.05em;font-weight:800;padding:9px}.menu-actions{display:flex;gap:6px;padding:7px;border-bottom:1px solid var(--line);background:rgba(255,249,233,.25)}.menu-actions .btn{flex:1}.menu-grid{display:grid;grid-template-columns:32px 1fr 1fr 1fr}.menu-grid>div{border-right:1px solid var(--line);border-bottom:1px solid var(--line)}.menu-grid>div:nth-child(4n){border-right:0}.menu-grid .mh{font-family:"Arial Narrow","Avenir Next Condensed","Trebuchet MS",sans-serif;font-size:11px;font-weight:800;color:var(--orange);text-align:center;padding:7px 2px}.menu-grid .mealhead{text-align:center}.menu-cell{min-width:0;min-height:47px}.menu-cell input{width:100%;height:100%;min-height:47px;border:0;background:transparent;color:var(--ink);padding:7px 6px;outline:none;font-size:10.5px}.menu-day{font-family:"Arial Narrow","Avenir Next Condensed","Trebuchet MS",sans-serif;font-size:17px;font-weight:800;color:var(--orange);display:flex;align-items:center;justify-content:center}
-.payments{display:grid;gap:6px}.payrow{display:grid;grid-template-columns:1.2fr .65fr .8fr 25px;gap:5px;align-items:center}.payrow input{width:100%;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--ink);padding:5px 2px;font-size:10px;outline:none}.payrow input[type=date]{font-size:9px}.payrow .paid{width:18px;height:18px}.payment-summary{font-size:11px;font-weight:700;margin-top:7px;color:var(--orange-dark)}
-@media(max-width:1050px){.lower{grid-template-columns:1fr 1fr}.paper{padding:22px}.days{overflow:hidden}.day textarea{height:128px}}
-@media(max-width:700px){.app{padding:7px}.toolbar{gap:7px}.nav{width:100%;display:grid;grid-template-columns:auto 1fr auto}.actions{width:100%;display:grid;grid-template-columns:1fr 1fr}.btn{min-height:40px;padding:8px 10px}.weeklabel{min-width:0;font-size:17px}.paper{padding:15px 11px 22px}h1{font-size:4.8rem;margin-bottom:14px}.days{overflow-x:auto;grid-template-columns:repeat(7,122px);-webkit-overflow-scrolling:touch}.day textarea{height:125px;font-size:13px}.lower{grid-template-columns:1fr;gap:22px}.checkrow{grid-template-columns:19px 1fr 78px}.menu-grid{grid-template-columns:27px 1fr 1fr 1fr}.menu-cell input{font-size:10px;padding:6px 4px}.progress-wrap{gap:8px}.progress-label{font-size:14px}.progress-count{min-width:65px;font-size:10px}}
-@media(orientation:landscape) and (max-width:950px){.paper{padding:18px}.lower{grid-template-columns:1fr 1fr}.day textarea{height:115px}.app{max-width:none}}
-@media print{html,body{background:#fff}.toolbar{display:none}.app{max-width:none;padding:0}.paper{border:0;box-shadow:none;padding:12px}.days{grid-template-columns:repeat(7,1fr)}.day textarea{height:115px}.lower{grid-template-columns:1fr 1fr;gap:14px}.menu-actions{display:none}}
+<style>:root{
+  --cream:#F8E9B7;
+  --cream-deep:#F3DFA0;
+  --paper:#FAEDC4;
+  --orange:#E84A24;
+  --orange-dark:#B9361A;
+  --ink:#71311F;
+  --line:#D99572;
+  --line-soft:rgba(217,149,114,.62);
+  --muted:#9E7A6C;
+  --white:#FFF9E9;
+  --radius:2px;
+  --font-display:"Avenir Next Condensed","Arial Narrow","Trebuchet MS",sans-serif;
+  --font-body:"Avenir Next","Trebuchet MS",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{background:#ece7df}
+body{margin:0;background:#ece7df;color:var(--ink);font-family:var(--font-body);-webkit-font-smoothing:antialiased}
+button,input,textarea,select{font:inherit}
+.app{max-width:1260px;margin:auto;padding:14px 14px 30px}
+
+/* SISTEMA VISUAL: misma línea, mismo borde, misma geometría */
+.toolbar{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+.nav,.actions{display:flex;gap:8px;align-items:center}
+.btn{appearance:none;border:1.5px solid var(--orange);background:var(--cream);color:var(--orange-dark);padding:9px 14px;font-family:var(--font-display);font-size:13px;font-weight:800;letter-spacing:.045em;text-transform:uppercase;cursor:pointer;border-radius:var(--radius);min-height:42px;transition:background .15s,color .15s,transform .08s}
+.btn:hover{background:var(--cream-deep)}
+.btn:active{transform:scale(.98)}
+.btn:focus-visible{outline:2px solid var(--orange-dark);outline-offset:2px}
+.btn.primary{background:var(--orange);color:#fff;border-color:var(--orange)}
+.btn.primary:hover{background:var(--orange-dark)}
+.btn.small{min-height:38px;padding:7px 10px;font-size:11px}
+.weeklabel{font-family:var(--font-display);font-size:18px;font-weight:800;letter-spacing:.065em;min-width:175px;text-align:center;text-transform:uppercase;color:var(--orange-dark)}
+
+.paper{background:var(--cream);border:1px solid var(--line);padding:26px 28px 30px}
+h1{font-family:var(--font-display);font-size:clamp(4rem,9vw,7.3rem);line-height:.78;margin:0 0 20px;color:var(--orange);font-weight:900;letter-spacing:-.055em}
+
+.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border:1px solid var(--line);background:rgba(255,249,233,.08)}
+.day{min-width:0;border-right:1px solid var(--line)}
+.day:last-child{border-right:0}
+.dayname{text-align:center;font-family:var(--font-display);font-size:14px;letter-spacing:.075em;font-weight:800;padding:8px 3px;color:var(--orange);text-transform:uppercase}
+.day textarea{display:block;width:100%;height:142px;border:0;border-top:1px solid var(--line);background:transparent;resize:none;padding:10px;color:var(--ink);outline:none;font-size:13px;line-height:1.45}
+
+.progress-wrap{display:flex;align-items:center;gap:12px;margin:17px 0 0}
+.progress-label,.section h2,.prompt,.habithead,.menuhead,.menu-grid .mh,.menu-day{font-family:var(--font-display)}
+.progress-label{font-size:15px;font-weight:800;white-space:nowrap;text-transform:uppercase;letter-spacing:.055em;color:var(--ink)}
+.progress{height:9px;border:1px solid var(--line);flex:1;background:transparent;overflow:hidden}
+.progress>span{display:block;height:100%;width:0;background:var(--orange);transition:width .2s}
+.progress-count{font-size:11px;font-weight:700;min-width:82px;text-align:right;color:var(--orange-dark)}
+
+.lower{display:grid;grid-template-columns:1.1fr 1.15fr 1fr 1.15fr;gap:22px;margin-top:20px}
+.section{min-width:0}
+.section h2{font-size:20px;letter-spacing:.045em;color:var(--orange);margin:0 0 10px;font-weight:900;text-transform:uppercase}
+.checks{display:grid;gap:5px}
+.checkrow{display:grid;grid-template-columns:20px minmax(0,1fr) 82px;gap:8px;align-items:center;min-height:34px}
+.checkrow.grocery{grid-template-columns:20px minmax(0,1fr) 88px}
+
+/* Todos los campos comparten el mismo lenguaje: fondo transparente + línea inferior */
+.checkrow input[type=text],.habit input[type=text],.payrow input,.menu-cell input{min-width:0;width:100%;border:0;border-bottom:1px solid var(--line-soft);background:transparent;color:var(--ink);outline:none}
+.checkrow input[type=text]{padding:6px 2px;font-size:13px}
+.checkrow input[type=text]::placeholder,.habit input[type=text]::placeholder,.payrow input::placeholder,.menu-cell input::placeholder,.promptbox::placeholder{color:var(--muted);opacity:.72}
+.checkrow input[type=text]:focus,.habit input[type=text]:focus,.payrow input:focus,.menu-cell input:focus{border-bottom-color:var(--orange);background:rgba(255,249,233,.28)}
+
+input[type=checkbox]{appearance:none;width:20px;height:20px;border:1.5px solid var(--orange);background:transparent;cursor:pointer;flex:none;position:relative;border-radius:var(--radius);margin:0}
+input[type=checkbox]:checked{background:var(--orange)}
+input[type=checkbox]:checked:after{content:"✓";position:absolute;color:#fff;font-size:14px;font-weight:900;left:3px;top:-1px}
+input[type=checkbox]:focus-visible{outline:2px solid var(--orange-dark);outline-offset:2px}
+
+/* Selectores integrados al sistema de formularios */
+.mini-select{appearance:none;border:1px solid var(--line-soft);border-radius:var(--radius);background:rgba(255,249,233,.18);color:var(--orange-dark);font-family:var(--font-body);font-size:10px;font-weight:800;letter-spacing:.025em;padding:6px 18px 6px 7px;outline:none;width:100%;min-height:30px;background-image:linear-gradient(45deg,transparent 50%,var(--orange-dark) 50%),linear-gradient(135deg,var(--orange-dark) 50%,transparent 50%);background-position:calc(100% - 8px) 12px,calc(100% - 5px) 12px;background-size:3px 3px,3px 3px;background-repeat:no-repeat}
+.mini-select:hover{background-color:rgba(255,249,233,.38)}
+.mini-select:focus-visible{outline:2px solid var(--orange-dark);outline-offset:1px}
+.priority-alta{color:var(--orange-dark)!important;border-color:var(--orange)!important}
+.priority-media{color:#8E5C49!important}
+.priority-baja{color:var(--muted)!important}
+
+.prompt{font-size:13px;font-weight:900;letter-spacing:.055em;color:var(--orange);margin:0 0 5px;text-transform:uppercase}
+.promptbox{display:block;width:100%;height:47px;border:1px solid var(--line-soft);border-radius:var(--radius);background:rgba(255,249,233,.10);color:var(--ink);resize:vertical;min-height:42px;padding:8px 9px;margin-bottom:10px;outline:none;font-size:12px;line-height:1.35}
+.promptbox:focus{border-color:var(--orange);background:rgba(255,249,233,.28)}
+
+.habits-title{margin-top:17px!important}
+.habit-head,.habit{display:grid;grid-template-columns:minmax(70px,1fr) repeat(7,22px);gap:5px;align-items:center}
+.habit-head{margin-bottom:4px}
+.habithead{font-size:12px;font-weight:900;text-align:center;color:var(--orange)}
+.habit{margin:6px 0}
+.habit input[type=text]{padding:5px 2px;font-size:11px}
+.habit-streak{font-size:9px;color:var(--muted);text-align:right;grid-column:1/-1;margin-top:-4px}
+
+.menu{border:1px solid var(--line);overflow:hidden}
+.menuhead{background:var(--orange);color:#fff;text-align:center;font-size:21px;letter-spacing:.07em;font-weight:900;padding:9px}
+.menu-actions{display:flex;gap:6px;padding:7px;border-bottom:1px solid var(--line);background:rgba(255,249,233,.22)}
+.menu-actions .btn{flex:1}
+.menu-grid{display:grid;grid-template-columns:32px 1fr 1fr 1fr}
+.menu-grid>div{border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.menu-grid>div:nth-child(4n){border-right:0}
+.menu-grid .mh{font-size:10px;font-weight:900;color:var(--orange);text-align:center;padding:8px 2px;letter-spacing:.025em}
+.menu-grid .mealhead{text-align:center}
+.menu-cell{min-width:0;min-height:52px}
+.menu-cell input{height:100%;min-height:52px;padding:8px 6px;font-size:10.5px;border-bottom:0}
+.menu-cell:focus-within{background:rgba(255,249,233,.24)}
+.menu-day{font-size:17px;font-weight:900;color:var(--orange);display:flex;align-items:center;justify-content:center}
+
+.payments{display:grid;gap:6px}
+.payrow{display:grid;grid-template-columns:1.2fr .65fr .8fr 25px;gap:6px;align-items:center}
+.payrow input{padding:6px 3px;font-size:10px;min-height:30px}
+.payrow input[type=date]{font-size:9px}
+.payrow .paid{width:20px;height:20px}
+.payment-summary{font-size:11px;font-weight:800;margin-top:8px;color:var(--orange-dark)}
+
+@media(max-width:1050px){
+  .lower{grid-template-columns:1fr 1fr}
+  .paper{padding:22px}
+  .day textarea{height:128px}
+}
+@media(max-width:700px){
+  .app{padding:7px}
+  .toolbar{gap:7px}
+  .nav{width:100%;display:grid;grid-template-columns:auto 1fr auto}
+  .actions{width:100%;display:grid;grid-template-columns:1fr 1fr}
+  .btn{min-height:42px;padding:8px 10px}
+  .weeklabel{min-width:0;font-size:16px}
+  .paper{padding:15px 11px 22px}
+  h1{font-size:4.8rem;margin-bottom:14px}
+  .days{overflow-x:auto;grid-template-columns:repeat(7,122px);-webkit-overflow-scrolling:touch}
+  .day textarea{height:125px;font-size:13px}
+  .lower{grid-template-columns:1fr;gap:22px}
+  .checkrow{grid-template-columns:20px minmax(0,1fr) 82px}
+  .menu-grid{grid-template-columns:28px 1fr 1fr 1fr}
+  .menu-cell{min-height:58px}
+  .menu-cell input{min-height:58px;font-size:10.5px;padding:7px 5px}
+  .progress-wrap{gap:8px}
+  .progress-label{font-size:13px}
+  .progress-count{min-width:65px;font-size:10px}
+}
+@media(orientation:landscape) and (max-width:950px){
+  .paper{padding:18px}
+  .lower{grid-template-columns:1fr 1fr}
+  .day textarea{height:115px}
+  .app{max-width:none}
+}
+@media print{
+  html,body{background:#fff}
+  .toolbar{display:none}
+  .app{max-width:none;padding:0}
+  .paper{border:0;box-shadow:none;padding:12px}
+  .days{grid-template-columns:repeat(7,1fr)}
+  .day textarea{height:115px}
+  .lower{grid-template-columns:1fr 1fr;gap:14px}
+  .menu-actions{display:none}
+}
 </style>
 </head>
 <body>
@@ -91,7 +221,7 @@ function renderGroceries(arr){document.getElementById("groceries").innerHTML=arr
 function renderHabits(arr){document.getElementById("habits").innerHTML=arr.map((h,r)=>{let done=h.c.filter(Boolean).length;return `<div class="habit"><input type="text" data-habit="${r}" value="${esc(h.t)}" placeholder="Hábito">${h.c.map((v,i)=>`<input type="checkbox" data-hc="${r}-${i}" ${v?'checked':''}>`).join("")}<div class="habit-streak">${done} / 7 días</div></div>`}).join("")}
 function renderMenu(arr){document.getElementById("menu").innerHTML=`<div class="mh"></div><div class="mh mealhead">DESAYUNO</div><div class="mh mealhead">COMIDA</div><div class="mh mealhead">CENA</div>`+arr.map((m,i)=>`<div class="menu-day">${menuDays[i]}</div><div class="menu-cell"><input data-m="${i}-b" value="${esc(m.b)}" placeholder="Escribe aquí…"></div><div class="menu-cell"><input data-m="${i}-l" value="${esc(m.l)}" placeholder="Escribe aquí…"></div><div class="menu-cell"><input data-m="${i}-d" value="${esc(m.d)}" placeholder="Escribe aquí…"></div>`).join("")}
 function renderPayments(arr){document.getElementById("payments").innerHTML=arr.map((p,i)=>`<div class="payrow"><input data-pt="${i}" value="${esc(p.t)}" placeholder="Concepto"><input data-pa="${i}" value="${esc(p.a)}" placeholder="$0" inputmode="decimal"><input type="date" data-pd="${i}" value="${esc(p.d)}"><input class="paid" type="checkbox" data-pc="${i}" ${p.c?'checked':''} title="Pagado"></div>`).join("");let total=arr.reduce((s,p)=>s+(parseFloat(String(p.a).replace(/[^0-9.]/g,''))||0),0),pending=arr.filter(p=>p.a&&!p.c).reduce((s,p)=>s+(parseFloat(String(p.a).replace(/[^0-9.]/g,''))||0),0);document.getElementById("paymentSummary").textContent=total?`Total: $${total.toFixed(2)} · Pendiente: $${pending.toFixed(2)}`:""}
-function updateProgress(){let d=data(),filled=d.tasks.filter(x=>x.t.trim()).length,done=d.tasks.filter(x=>x.t.trim()&&x.c).length,pct=filled?Math.round(done/filled*100):0;document.getElementById("progressBar").style.width=pct+"%";document.getElementById("progressCount").textContent=`${done} de ${filled} · ${pct}%`}
+function updateProgress(){let d=data(),filled=d.tasks.filter(x=>x.t.trim()).length,done=d.tasks.filter(x=>x.t.trim()&&x.c).length,pct=filled?Math.round(done/filled*100):0;document.getElementById("progressBar").style.width=pct+"%";document.getElementById("progressCount").textContent=filled?`${done} de ${filled} · ${pct}%`:"Sin tareas"}
 function wire(){document.querySelectorAll("[data-day]").forEach(x=>x.oninput=()=>{data().days[x.dataset.day]=x.value;save()});document.querySelectorAll("[data-key]").forEach(x=>x.oninput=()=>{data()[x.dataset.key]=x.value;save()});
  document.querySelectorAll("[data-tt]").forEach(x=>x.oninput=()=>{data().tasks[x.dataset.tt].t=x.value;save();updateProgress()});document.querySelectorAll("[data-tc]").forEach(x=>x.onchange=()=>{data().tasks[x.dataset.tc].c=x.checked;save();updateProgress()});document.querySelectorAll("[data-tp]").forEach(x=>x.onchange=()=>{data().tasks[x.dataset.tp].p=x.value;save();x.className='mini-select priority-'+x.value.toLowerCase()});
  document.querySelectorAll("[data-gt]").forEach(x=>x.oninput=()=>{data().groceries[x.dataset.gt].t=x.value;save()});document.querySelectorAll("[data-gc]").forEach(x=>x.onchange=()=>{data().groceries[x.dataset.gc].c=x.checked;save()});document.querySelectorAll("[data-gcat]").forEach(x=>x.onchange=()=>{data().groceries[x.dataset.gcat].cat=x.value;save()});
